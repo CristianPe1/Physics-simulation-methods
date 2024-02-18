@@ -1,0 +1,106 @@
+Updated file (07Feb) Numeric Integration
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch main
+# Your branch is ahead of 'origin/main' by 2 commits.
+#   (use "git push" to publish your local commits)
+#
+# Changes to be committed:
+#	new file:   .tmp.driveupload/194119
+#	new file:   .tmp.driveupload/213559
+#	new file:   .tmp.driveupload/213563
+#	new file:   .tmp.driveupload/213565
+#	new file:   .tmp.driveupload/213569
+#	new file:   .tmp.driveupload/213573
+#	new file:   .tmp.driveupload/213577
+#	new file:   .tmp.driveupload/213579
+#	new file:   .tmp.driveupload/213583
+#	new file:   .tmp.driveupload/213587
+#	new file:   .tmp.driveupload/213589
+#	new file:   .tmp.driveupload/213593
+#	new file:   .tmp.driveupload/213595
+#	new file:   .tmp.driveupload/213597
+#	new file:   .tmp.driveupload/213601
+#	new file:   .tmp.driveupload/213603
+#	new file:   .tmp.driveupload/213605
+#	new file:   .tmp.driveupload/213607
+#	new file:   .tmp.driveupload/213611
+#	new file:   .tmp.driveupload/213613
+#	new file:   .tmp.driveupload/213615
+#	new file:   .tmp.driveupload/213619
+#	new file:   .tmp.driveupload/213623
+#	new file:   .tmp.driveupload/213627
+#	new file:   .tmp.driveupload/213629
+#	new file:   .tmp.driveupload/213631
+#	new file:   .tmp.driveupload/213635
+#	new file:   .tmp.driveupload/213637
+#	new file:   .tmp.driveupload/213639
+#	new file:   .tmp.driveupload/213643
+#	new file:   .tmp.driveupload/213647
+#	new file:   .tmp.driveupload/213651
+#	new file:   .tmp.driveupload/213653
+#	new file:   .tmp.driveupload/213655
+#	new file:   .tmp.driveupload/213659
+#	new file:   .tmp.driveupload/213663
+#	new file:   .tmp.driveupload/213667
+#	new file:   .tmp.driveupload/213671
+#	new file:   .tmp.driveupload/213673
+#	new file:   .tmp.driveupload/213677
+#	new file:   .tmp.driveupload/213679
+#	new file:   .tmp.driveupload/213683
+#	new file:   .tmp.driveupload/213687
+#	new file:   .tmp.driveupload/213691
+#	new file:   .tmp.driveupload/213693
+#	new file:   .tmp.driveupload/213695
+#	new file:   .tmp.driveupload/213699
+#	new file:   .tmp.driveupload/213701
+#	new file:   .tmp.driveupload/213705
+#	new file:   .tmp.driveupload/213707
+#	new file:   .tmp.driveupload/213709
+#	new file:   .tmp.driveupload/213713
+#	new file:   .tmp.driveupload/213715
+#	new file:   .tmp.driveupload/213719
+#	new file:   .tmp.driveupload/213723
+#	new file:   .tmp.driveupload/213725
+#	modified:   "Clases/Programaci\303\263n B\303\241sica (repaso) y Ec. Dif. Ordinarias (3 clases)/(Feb09) Integraci\303\263n_num\303\251rica_de_ecuaciones_ordinarias.ipynb"
+#
+# Untracked files:
+#	.tmp.driveupload/213730
+#	.tmp.driveupload/213736
+#	.tmp.driveupload/213740
+#	.tmp.driveupload/213742
+#	.tmp.driveupload/213744
+#	.tmp.driveupload/213746
+#	.tmp.driveupload/213750
+#	.tmp.driveupload/213754
+#	.tmp.driveupload/213756
+#	.tmp.driveupload/213758
+#	.tmp.driveupload/213762
+#	.tmp.driveupload/213766
+#	.tmp.driveupload/213768
+#	.tmp.driveupload/213772
+#	.tmp.driveupload/213774
+#	.tmp.driveupload/213778
+#	.tmp.driveupload/213782
+#	.tmp.driveupload/213786
+#	.tmp.driveupload/213790
+#	.tmp.driveupload/213794
+#	.tmp.driveupload/213798
+#	.tmp.driveupload/213800
+#	.tmp.driveupload/213804
+#	.tmp.driveupload/213806
+#	.tmp.driveupload/213808
+#	.tmp.driveupload/213812
+#	.tmp.driveupload/213816
+#	.tmp.driveupload/213818
+#	.tmp.driveupload/213822
+#	.tmp.driveupload/213824
+#	.tmp.driveupload/213826
+#	.tmp.driveupload/213828
+#	.tmp.driveupload/213832
+#	.tmp.driveupload/213834
+#	.tmp.driveupload/213836
+#	.tmp.driveupload/213840
+#	.tmp.driveupload/213844
+#
