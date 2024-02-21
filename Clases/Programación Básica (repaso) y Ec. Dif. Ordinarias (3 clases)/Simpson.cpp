@@ -46,7 +46,7 @@ int main() {
     }
 
     for (int i = 0; i < Nsteps; ++i) {
-        std::cout << xdata[i] << " " << ydata[i] << std::endl;
+        std::cout << xdata[i] << "\t" << ydata[i] << std::endl;
     }
 
     return 0;
