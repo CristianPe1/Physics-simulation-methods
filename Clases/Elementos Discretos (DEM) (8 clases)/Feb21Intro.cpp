@@ -17,7 +17,7 @@ private:
   double x, y, Vx, Vy, Fx, Fy, m, R;
 public:
   void Inicie(double x0, double y0, double Vx0, double Vy0, double m0, double R0);
-  void CalculaFuerza(void);
+  void CalculeFuerza(void);
   void Muevase(double dt);
   void Dibujese(void);
   double Getx(void){return x;};//In line -- Macro -- Search and replace
@@ -29,7 +29,7 @@ void Objeto::Inicie(double x0, double y0, double Vx0, double Vy0, double m0, dou
       x=x0; y=y0; Vx=Vx0; Vy=Vy0; m=m0; R=R0;
 }
 
-void Objeto::CalculaFuerza(void){
+void Objeto::CalculeFuerza(void){
   Fx=0; Fy=-m*g;
 }
 
