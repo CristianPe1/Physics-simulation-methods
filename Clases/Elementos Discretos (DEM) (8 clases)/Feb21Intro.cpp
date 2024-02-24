@@ -47,46 +47,46 @@ void Objeto::Dibujese(void){
 
 //-----------------------Funcion Globales-----------------------
 //-----------------------Funcion animacion-----------------------
-void InicieAnimacion(void){
-  //  cout<<"set terminal gif animate"<<endl; 
-  //  cout<<"set output 'DosPendulos.gif'"<<endl;
-  cout<<"unset key"<<endl;
-  cout<<"set xrange[-1:41]"<<endl;
-  cout<<"set yrange[-10:8]"<<endl;
-  cout<<"set size ratio -1"<<endl;
-  cout<<"set parametric"<<endl;
-  cout<<"set trange [0:7]"<<endl;
-  cout<<"set isosamples 12"<<endl;  
-}
-void InicieCuadro(void){
-    cout<<"plot 0,0 ";
-}
-
-void TermineCuadro(void){
-    cout<<endl;
-}
-
-
-//-----------------------Funcion Principal-----------------------
-int main(){
-  double t,dt=0.001,ttotal=2.5;
-  int Ncuadros=200; double tdibujo,tcuadro=ttotal/Ncuadros;
-  Objeto Balon;
-
-  InicieAnimacion();
-  
-  //----------(x0,y0,Vx0,Vy0,m0   ,R0)
-  Balon.Inicie( 0, 0, 16,  9,0.453,1.0);
-  for(t=tdibujo=0;t<ttotal;t+=dt,tdibujo+=dt){
-    if(tdibujo>tcuadro){
-      InicieCuadro();
-      Balon.Dibujese();
-      TermineCuadro();
-      tdibujo=0;
+    void InicieAnimacion(void){
+      //  cout<<"set terminal gif animate"<<endl; 
+      //  cout<<"set output 'DosPendulos.gif'"<<endl;
+      cout<<"unset key"<<endl;
+      cout<<"set xrange[-1:41]"<<endl;
+      cout<<"set yrange[-10:8]"<<endl;
+      cout<<"set size ratio -1"<<endl;
+      cout<<"set parametric"<<endl;
+      cout<<"set trange [0:7]"<<endl;
+      cout<<"set isosamples 12"<<endl;  
     }
-    //cout<<Balon.Getx()<<" "<<Balon.Gety()<<endl;
-    Balon.CalculeFuerza();
-    Balon.Muevase(dt);
-    
-  }
-}
+    void InicieCuadro(void){
+        cout<<"plot 0,0 ";
+    }
+
+    void TermineCuadro(void){
+        cout<<endl;
+    }
+
+
+    //-----------------------Funcion Principal-----------------------
+    int main(){
+      double t,dt=0.001,ttotal=2.5;
+      int Ncuadros=200; double tdibujo,tcuadro=ttotal/Ncuadros;
+      Objeto Balon;
+
+      InicieAnimacion();
+      
+      //----------(x0,y0,Vx0,Vy0,m0   ,R0)
+      Balon.Inicie( 0, 0, 16,  9,0.453,1.0);
+      for(t=tdibujo=0;t<ttotal;t+=dt,tdibujo+=dt){
+        if(tdibujo>tcuadro){
+          InicieCuadro();
+          Balon.Dibujese();
+          TermineCuadro();
+          tdibujo=0;
+        }
+        //cout<<Balon.Getx()<<" "<<Balon.Gety()<<endl;
+        Balon.CalculeFuerza();
+        Balon.Muevase(dt);
+        
+      }
+    }
