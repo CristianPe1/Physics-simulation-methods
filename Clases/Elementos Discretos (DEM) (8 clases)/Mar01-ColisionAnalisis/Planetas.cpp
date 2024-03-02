@@ -4,7 +4,6 @@
 using namespace std;
 
 //Constantes del problema físico
-const int N=2;
 const double G=1.0;
 
 //Constantes del algoritmo de integración
@@ -95,15 +94,21 @@ void TermineCuadro(void){
 }
 
 int main(){
-
+  
+  //Parámetros de simulación
+  //N: número de planetas
+  int N=2;
+  //Condiciones iniciales
   double r=11,m0=10,m1=1;
   double M=m0+m1, mu=m0*m1/M;
   double x0=-m1*r/M,x1=m0*r/M;
   double omega=sqrt(G*M/(r*r*r)); 
   double T=2*M_PI/omega;
   double V0=omega*x0, V1=omega*x1;
-  double t,dt=0.1,ttotal=T;
-  int Ncuadros=20000; 
+
+  //Numero de pasos y de frames en la simulación 
+  double t,dt=0.01,ttotal=T;
+  int Ncuadros=200; 
   double tdibujo,tcuadro=ttotal/Ncuadros;
   Cuerpo Planeta[N];
   Colisionador Newton;
@@ -118,7 +123,7 @@ int main(){
   //CORRO
   for(t=tdibujo=0;t<ttotal;t+=dt,tdibujo+=dt){
 
-    if(tdibujo>tcuadro){
+    if(tdibujo>=tcuadro){
       
       InicieCuadro();
       for(i=0;i<N;i++) Planeta[i].Dibujese();
