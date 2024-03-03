@@ -1,22 +1,17 @@
-# Compilador y opciones
-CXX = g++
-CXXFLAGS = -std=c++11 -Wall
+CXXFLAGS = -O2 -std=c++17
 
-# Nombre del ejecutable
-TARGET = simulacion
+all: Planetas.gif
 
-# Archivos fuente y objetos
-SRCS = main.cpp
-OBJS = $(SRCS:.cpp=.o)
+%.x: %.cpp
+	g++ $(CXXFLAGS) $^ -o $@
 
-# Regla principal para construir el ejecutable
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS)
+data.txt: Planetas.x
+	./$^ > $@
 
-# Regla para compilar cada archivo fuente
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+Planetas.gif: data.txt
+	gnuplot $^
 
-# Limpieza de archivos intermedios y ejecutable
+.PHONY: clean
+
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f *.x *.gp *.pdf 
