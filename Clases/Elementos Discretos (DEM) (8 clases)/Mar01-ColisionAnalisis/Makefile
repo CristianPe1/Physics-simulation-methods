@@ -1,40 +1,22 @@
-#Bandera que se lo colva al compildor
-CXXFLAGS=-o2 -std=c++17 
+# Compilador y opciones
+CXX = g++
+CXXFLAGS = -std=c++11 -Wall
 
-all: graph.pdf
+# Nombre del ejecutable
+TARGET = simulacion
 
-# sumupdown.x: sumupdown.cpp
-# 	g++  sumupdown.cpp -o sumupdown.x
+# Archivos fuente y objetos
+SRCS = main.cpp
+OBJS = $(SRCS:.cpp=.o)
 
-# sumupdown.x: sumupdown.cpp
-# 	g++ $(CXXFLAGS) sumupdown.cpp -o sumupdown.x
+# Regla principal para construir el ejecutable
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS)
 
-#Establece la dependencia entre los archivos con extension
-#.cpp y lso archivos ejecutables con extension .x
+# Regla para compilar cada archivo fuente
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-#La notacion % es un comodin que coincide con cualquier
-#cadena de caracteres
-
-# $^: Es una variable automática que representa todas
-#las dependencias. En este caso, representa el archivo
-#fuente ('%.cpp')
-
-# -o $@: Especifica el nombre del archivo de salida.
-# $@ es una variable automatica que representa el objeto
-# de la regla, en este caso, el archivo ejecutable 
-#(%x)
-
-%.x: %.cpp
-	g++ $(CXXFLAGS) $^ -o $@
-
-data.txt: gamma.x
-	./gamma.x > data.txt
-
-graph.pdf: data.txt script.gp
-	gnuplot script.gp
-
-
-.PHONY: clean
-
+# Limpieza de archivos intermedios y ejecutable
 clean:
-	rm -f *.x *.txt *.pdf
+	rm -f $(OBJS) $(TARGET)
