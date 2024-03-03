@@ -1,0 +1,46 @@
+# Opciones de compilación
+CXXFLAGS = 
+
+
+# Compilador
+CC = python3
+
+all: Planetas.gif
+
+%.x: %.ipynb
+	CC $(CXXFLAGS) $^ -o $@
+
+data.txt: Planetas.x
+	./$^ > $@
+
+Planetas.gif: data.txt
+	gnuplot $^
+
+.PHONY: clean
+
+clean:
+	rm -f *.x *.gp *.pdf 
+
+
+# # Makefile para un proyecto de Python
+
+# # Definiciones de variables
+# PYTHON = python3
+# SOURCE_DIR = src
+# SCRIPT = mi_script.py
+
+# # Regla por defecto
+# all: run
+
+# # Regla para ejecutar el script
+# run:
+#     $(PYTHON) $(SOURCE_DIR)/$(SCRIPT)
+
+# # Regla para realizar alguna otra tarea
+# otra_tarea:
+#     # Comandos para la otra tarea
+
+# # Regla para limpiar archivos generados
+# clean:
+#     # Comandos para limpiar archivos generados
+

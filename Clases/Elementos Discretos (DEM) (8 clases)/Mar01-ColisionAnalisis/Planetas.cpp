@@ -36,8 +36,8 @@ public:
 class Colisionador{
 private:
 public:
-  void CalculeTodasLasFuerzas(Cuerpo * Planetas);
-  void CalculeFuerzaEntre(Cuerpo & Planeta1,Cuerpo & Planeta2);
+  void CalculeTodasLasFuerzas(Cuerpo * planetas);
+  void CalculeFuerzaEntre(Cuerpo & planetas1,Cuerpo & planetas2);
 };
 
 //-------Implementar las funciones de las clases------
@@ -56,28 +56,28 @@ void Cuerpo::Dibujese(void){
   cout<<" , "<<r.x()<<"+"<<R<<"*cos(t),"<<r.y()<<"+"<<R<<"*sin(t)";
 }
 //------- Funciones de la clase Colisionador --------
-void Colisionador::CalculeTodasLasFuerzas(Cuerpo * Planeta){
+void Colisionador::CalculeTodasLasFuerzas(Cuerpo * planetas){
   int i,j;
-  //Borro las fuerzas de todos los planetas
+  //Borro las fuerzas de todos los planetass
   for(i=0;i<N;i++)
-    Planeta[i]. BorreFuerza();
+    planetas[i]. BorreFuerza();
   //Recorro por parejas, calculo la fuerza de cada pareja y se la sumo a los dos
   for(i=0;i<N;i++)
     for(j=0;j<i;j++)
-      CalculeFuerzaEntre(Planeta[i],Planeta[j]);
+      CalculeFuerzaEntre(planetas[i],planetas[j]);
 }
-void Colisionador::CalculeFuerzaEntre(Cuerpo & Planeta1, Cuerpo & Planeta2){
-  double m1=Planeta1.m, m2=Planeta2.m;
-  vector3D r21=Planeta2.r-Planeta1.r; double r2=r21.norm2();
+void Colisionador::CalculeFuerzaEntre(Cuerpo & planetas1, Cuerpo & planetas2){
+  double m1=planetas1.m, m2=planetas2.m;
+  vector3D r21=planetas2.r-planetas1.r; double r2=r21.norm2();
   double aux=G*m2*m1*pow(r2,-1.5);
   vector3D F1=r21*aux;
-  Planeta1.SumeFuerza(F1);  Planeta2.SumeFuerza(F1*(-1));
+  planetas1.SumeFuerza(F1);  planetas2.SumeFuerza(F1*(-1));
 }
 //----------- Funciones Globales -----------
 //---Funciones de Animacion---
 void InicieAnimacion(void){
   cout<<"set terminal gif animate"<<endl; 
-  cout<<"set output 'Planetas.gif'"<<endl;
+  cout<<"set output 'planetass.gif'"<<endl;
   cout<<"unset key"<<endl;
   cout<<"set xrange[-11:11]"<<endl;
   cout<<"set yrange[-11:11]"<<endl;
@@ -96,7 +96,7 @@ void TermineCuadro(void){
 int main(){
   
   //Parámetros de simulación
-  //N: número de planetas
+  //N: número de planetass
   int N=2;
   //Condiciones iniciales
   double r=11,m0=10,m1=1;
@@ -110,7 +110,7 @@ int main(){
   double t,dt=0.01,ttotal=T;
   int Ncuadros=200; 
   double tdibujo,tcuadro=ttotal/Ncuadros;
-  Cuerpo Planeta[N];
+  Cuerpo planetas[N];
   Colisionador Newton;
   int i;
 
@@ -118,38 +118,38 @@ int main(){
   
   //INICIO
   //---------------(x0,y0,z0,Vx0,   Vy0,Vz0,m0,R0)
-  Planeta[0].Inicie(x0, 0, 0,  0, 0.5*V0,  0,m0,1.0);
-  Planeta[1].Inicie(x1, 0, 0,  0, 0.5*V1,  0,m1,0.5);
+  planetas[0].Inicie(x0, 0, 0,  0, 0.5*V0,  0,m0,1.0);
+  planetas[1].Inicie(x1, 0, 0,  0, 0.5*V1,  0,m1,0.5);
   //CORRO
   for(t=tdibujo=0;t<ttotal;t+=dt,tdibujo+=dt){
 
     if(tdibujo>=tcuadro){
       
       InicieCuadro();
-      for(i=0;i<N;i++) Planeta[i].Dibujese();
+      for(i=0;i<N;i++) planetas[i].Dibujese();
       TermineCuadro();
       
       tdibujo=0;
     }
-    // cout<<Planeta[1].Getx()<<" "<<Planeta[1].Gety()<<endl;
+    // cout<<planetas[1].Getx()<<" "<<planetas[1].Gety()<<endl;
     
-    for(i=0;i<N;i++) Planeta[i].Mueva_r(dt,xi);    
-    Newton.CalculeTodasLasFuerzas(Planeta); 
-    for(i=0;i<N;i++) Planeta[i].Mueva_V(dt,Um2lambdau2);
+    for(i=0;i<N;i++) planetas[i].Mueva_r(dt,xi);    
+    Newton.CalculeTodasLasFuerzas(planetas); 
+    for(i=0;i<N;i++) planetas[i].Mueva_V(dt,Um2lambdau2);
 
-    for(i=0;i<N;i++) Planeta[i].Mueva_r(dt,chi);
-    Newton.CalculeTodasLasFuerzas(Planeta); 
-    for(i=0;i<N;i++) Planeta[i].Mueva_V(dt,lambda);
+    for(i=0;i<N;i++) planetas[i].Mueva_r(dt,chi);
+    Newton.CalculeTodasLasFuerzas(planetas); 
+    for(i=0;i<N;i++) planetas[i].Mueva_V(dt,lambda);
     
-    for(i=0;i<N;i++) Planeta[i].Mueva_r(dt,Um2chiplusxi);
-    Newton.CalculeTodasLasFuerzas(Planeta); 
-    for(i=0;i<N;i++)Planeta[i].Mueva_V(dt,lambda);
+    for(i=0;i<N;i++) planetas[i].Mueva_r(dt,Um2chiplusxi);
+    Newton.CalculeTodasLasFuerzas(planetas); 
+    for(i=0;i<N;i++)planetas[i].Mueva_V(dt,lambda);
 
-    for(i=0;i<N;i++) Planeta[i].Mueva_r(dt,chi);
-    Newton.CalculeTodasLasFuerzas(Planeta); 
-    for(i=0;i<N;i++)Planeta[i].Mueva_V(dt,Um2lambdau2);
+    for(i=0;i<N;i++) planetas[i].Mueva_r(dt,chi);
+    Newton.CalculeTodasLasFuerzas(planetas); 
+    for(i=0;i<N;i++)planetas[i].Mueva_V(dt,Um2lambdau2);
 
-    for(i=0;i<N;i++) Planeta[i].Mueva_r(dt,xi);
+    for(i=0;i<N;i++) planetas[i].Mueva_r(dt,xi);
     
   }
   return 0;
