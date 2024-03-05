@@ -14,4 +14,4 @@ Planetas.gif: data.txt
 .PHONY: clean
 
 clean:
-	rm -f *.x *.gp *.pdf 
+	rm -f *.x *.gp *.pdf *.txt *.gif

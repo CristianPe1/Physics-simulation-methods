@@ -78,7 +78,7 @@ void Colisionador::CalculeFuerzaEntre(Cuerpo & planetas1, Cuerpo & planetas2){
 //---Funciones de Animacion---
 void InicieAnimacion(void){
   cout<<"set terminal gif animate"<<endl; 
-  cout<<"set output 'planetass.gif'"<<endl;
+  cout<<"set output 'planetas.gif'"<<endl;
   cout<<"unset key"<<endl;
   cout<<"set xrange[-11:11]"<<endl;
   cout<<"set yrange[-11:11]"<<endl;
@@ -97,8 +97,7 @@ void TermineCuadro(void){
 int main(){
   
   //Parámetros de simulación
-  //N: número de planetass
-  int N=2;
+  
   //Condiciones iniciales
   double r=11,m0=10,m1=1;
   double M=m0+m1, mu=m0*m1/M;
