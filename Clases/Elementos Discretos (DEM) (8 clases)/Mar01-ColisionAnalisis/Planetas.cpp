@@ -5,6 +5,7 @@ using namespace std;
 
 //Constantes del problema físico
 const double G=1.0;
+const int N=2; //Número de planetass
 
 //Constantes del algoritmo de integración
 const double xi=0.1786178958448091;
@@ -108,7 +109,7 @@ int main(){
 
   //Numero de pasos y de frames en la simulación 
   double t,dt=0.01,ttotal=T;
-  int Ncuadros=200; 
+  int Ncuadros=300; 
   double tdibujo,tcuadro=ttotal/Ncuadros;
   Cuerpo planetas[N];
   Colisionador Newton;
