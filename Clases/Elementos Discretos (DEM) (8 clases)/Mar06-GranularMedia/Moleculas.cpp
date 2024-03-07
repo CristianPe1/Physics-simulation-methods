@@ -7,11 +7,11 @@ using namespace std;
 //Constantes del problema físico
 const double G=1.0;
 //Número de moleculass
-const int Nx=5; 
-const int Ny=5; 
+const int Nx=6; 
+const int Ny=6; 
+const double Lx=60, Ly=60; 
 const int N = Nx*Ny;
 
-const double A = Lx*Ly;
 const double K=1.0e4; //Elasticidad de la colisión
 
 //Constantes del algoritmo de integración
@@ -67,10 +67,10 @@ void Cuerpo::Dibujese(void){
 void Colisionador::CalculeTodasLasFuerzas(Cuerpo * moleculas){
   int i,j;
   //Borro las fuerzas de todos los moleculass
-  for(i=0;i<N;i++)
+  for(i=0;i<N+4;i++)
     moleculas[i]. BorreFuerza();
   //Recorro por parejas, calculo la fuerza de cada pareja y se la sumo a los dos
-  for(i=0;i<N;i++)
+  for(i=0;i<N+4;i++)
     for(j=0;j<i;j++)
       CalculeFuerzaEntre(moleculas[i],moleculas[j]);
 }
@@ -78,36 +78,48 @@ void Colisionador::CalculeFuerzaEntre(Cuerpo & moleculas1, Cuerpo & moleculas2){
   
   //Calcular el vector normal
   vector3D r21=moleculas2.r-moleculas1.r; 
-  double r=r21.norm2();
+  double d=r21.norm();
 
 
   //Determinar si hay colisión
-  double R1=moleculas1.R, R2=moleculas2.R;
-  double s= R1 + R2 - r;
+  double s= moleculas1.R + moleculas2.R - d;
   
   if(s>0){
     double aux= K*pow(s,1.5);
 
     //Calcular vector normal
-    vector3D n = r21*(1.0/sqrt(r));
+    vector3D n = r21*(1.0/d);
 
     //Calcular la fuerza
     vector3D F1=n*aux;
 
     //Sumar las fuerzas
-    moleculas1.SumeFuerza(F1);  moleculas2.SumeFuerza(F1*(-1));
+    moleculas2.SumeFuerza(F1);  moleculas1.SumeFuerza(F1*(-1));
 
   }
-    
 }
+
+// void Colisionador::CalculeFuerzaEntre(Cuerpo & Molecula1,Cuerpo & Molecula2){
+//   //Determinar si hay colision
+//   vector3D r21=Molecula2.r-Molecula1.r; double d=r21.norm();
+//   double s=(Molecula1.R+Molecula2.R)-d;
+//   if(s>0){ //Si hay colisión
+//     //Calcular el vector normal
+//     vector3D n=r21*(1.0/d);
+//     //Calculo la fuerza
+//     vector3D F2=n*(K*pow(s,1.5));
+//     //Las sumo a los granos
+//     Molecula2.SumeFuerza(F2);  Molecula1.SumeFuerza(F2*(-1));
+//   }
+// }
 //----------- Funciones Globales -----------
 //---Funciones de Animacion---
 void InicieAnimacion(void){
   cout<<"set terminal gif animate"<<endl; 
   cout<<"set output 'moleculas.gif'"<<endl;
   cout<<"unset key"<<endl;
-  cout<<"set xrange[-11:11]"<<endl;
-  cout<<"set yrange[-11:11]"<<endl;
+  cout<<"set xrange[-20:"<<Lx + 20<<"]"<<endl;
+  cout<<"set yrange[-20:"<<Ly + 20<<"]"<<endl;
   cout<<"set size ratio -1"<<endl;
   cout<<"set parametric"<<endl;
   cout<<"set trange [0:7]"<<endl;
@@ -115,6 +127,11 @@ void InicieAnimacion(void){
 }
 void InicieCuadro(void){
     cout<<"plot 0,0 ";
+    cout<<" , "<<Lx/7<<"*t,0";        //pared de abajo
+    cout<<" , "<<Lx/7<<"*t,"<<Ly;     //pared de arriba
+    cout<<" , 0,"<<Ly/7<<"*t";        //pared de la izquierda
+    cout<<" , "<<Lx<<","<<Ly/7<<"*t"; //pared de la derecha
+    
 }
 void TermineCuadro(void){
     cout<<endl;
@@ -122,46 +139,48 @@ void TermineCuadro(void){
 
 int main(){
   
-  //Numero de pasos y de frames en la simulación 
-  //double t,dt=0.01,ttotal=T;
-  int Ncuadros=300; 
-  double tdibujo,tcuadro=ttotal/Ncuadros;
-  Cuerpo moleculas[N];
+  Cuerpo moleculas[N+4];
   Colisionador Newton;
   Crandom ran64(1);
-  int i;
-
+  int i,ix,iy;
   //Parametros de la simulación
-  //Dimesiones de la caja
-  double Lx=60, Ly=60; 
-  double dx = Lx/(Nx + 1), dy = Ly/(Ny + 1);
-  double m0=1.0, R0=2.0;
-  double theta;
-
-  //Teorema de equipartición de la energía
-  double kT = 10.0, V0 = sqrt(kT/m0);
-  int Ncuadrados = 1000;
-  double t,dt=1.0e-3,tmax=10*Lx/V0; tdibujo = tmax/Ncuadros;
+  double m0=0.001; double R0=4;
+  double kT=100; 
+  //Variables auxiliares para la condición inicial
+  double dx=Lx/(Nx+1),dy=Ly/(Ny+1);
+  double theta; double V0=sqrt(kT/m0);
+  double x0,y0,Vx0,Vy0;
+  //Variables auxiliares para correr la simulacion
+  int Ncuadros=1000; double t,tdibujo,dt=1e-3,tmax=Lx/V0,tcuadro=tmax/Ncuadros; 
   
+  //Variables auxiliares para las paredes
+  double Rpared=10*Lx, Mpared=100*m0;
 
   InicieAnimacion();
   
   //INICIO
-  for(int i=0; i<Nx; i++){
-    for(int j=0; j<Ny; j++){
-      theta = 2*M_PI*ran64.r();
-      double x0 = (i+1)*dx, y0 = (j+1)*dy;
-      double V0x = V0*cos(theta), V0y = V0*sin(theta);
-      moleculas[i*Ny + j].Inicie(x0, y0, 0, V0x, V0y, 0, m0, R0);
-    }
-  }
+  //Inicializar las paredes
+  moleculas[N].Inicie(Lx/2,Ly+Rpared, 0,  0, 0,  0,Mpared,Rpared); //Pared arriba
+  moleculas[N + 1].Inicie(Lx/2,-Rpared, 0,  0, 0,  0,Mpared,Rpared); //Pared abajo
+  moleculas[N + 2].Inicie(Lx+Rpared,Ly/2, 0,  0, 0,  0,Mpared,Rpared); //Pared derecha
+  moleculas[N + 3].Inicie(-Rpared,Ly/2, 0,  0, 0,  0,Mpared,Rpared); //Pared izquierda
+  
 
+
+  for(ix=0;ix<Nx;ix++)
+    for(iy=0;iy<Ny;iy++){
+      theta=2*M_PI*ran64.r();
+      x0=(ix+1)*dx; y0=(iy+1)*dy; Vx0=V0*cos(theta); Vy0=V0*sin(theta);
+      //----------------(x0,y0,z0,Vx0,Vy0,Vz0,m0,R0)
+      moleculas[iy*Nx+ix].Inicie(x0,y0, 0,Vx0,Vy0,  0,m0,R0);	
+    }
+  
 
   //---------------(x0,y0,z0,Vx0,   Vy0,Vz0,m0,R0)
   // moleculas[0].Inicie(x0, 0, 0,  0, 0.5*V0,  0,m0,1.0);
   // moleculas[1].Inicie(x1, 0, 0,  0, 0.5*V1,  0,m1,0.5);
   //CORRO
-  for(t=tdibujo=0;t<ttotal;t+=dt,tdibujo+=dt){
+  for(t=tdibujo=0;t<tmax;t+=dt,tdibujo+=dt){
 
     if(tdibujo>=tcuadro){
       
