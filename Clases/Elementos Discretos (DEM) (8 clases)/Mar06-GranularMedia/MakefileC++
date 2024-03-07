@@ -1,14 +1,14 @@
 CXXFLAGS = -O2 -std=c++17
 
-all: Planetas.gif
+all: Moleculas.gif
 
 %.x: %.cpp
 	g++ $(CXXFLAGS) $^ -o $@
 
-data.txt: Planetas.x
+data.txt: Moleculas.x
 	./$^ > $@
 
-Planetas.gif: data.txt
+Moleculas.gif: data.txt
 	gnuplot $^
 
 .PHONY: clean
