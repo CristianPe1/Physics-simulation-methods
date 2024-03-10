@@ -39,7 +39,7 @@ void Cuerpo::Muevase(double dt){
 
 int main(){
   double t,dt=0.001,ttotal=2.5;
-  int Ncuadros=200; double tdibujo,tcuadro=ttotal/Ncuadros;
+  int Ncuadros=100; double tdibujo,tcuadro=ttotal/Ncuadros;
   Cuerpo Balon;
 
 
@@ -47,10 +47,10 @@ int main(){
   Balon.Inicie( 0, 0, 0, 16,  9,  0,0.453,1.0);
   for(t=tdibujo=0;t<ttotal;t+=dt,tdibujo+=dt){
     if(tdibujo>tcuadro){
-
+      cout<<Balon.Getx()<<" "<<Balon.Gety()<<endl;
       tdibujo=0;
     }
-    cout<<Balon.Getx()<<" "<<Balon.Gety()<<endl;
+    
     Balon.CalculeFuerza();
     Balon.Muevase(dt);
 

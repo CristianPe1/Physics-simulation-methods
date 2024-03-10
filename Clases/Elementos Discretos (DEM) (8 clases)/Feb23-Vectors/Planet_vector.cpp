@@ -20,6 +20,7 @@ public:
   void Muevase(double dt);
   double Getx(void){return r.x();}; // Inline
   double Gety(void){return r.y();}; // Inline
+  void Dibujese(void);
 };
 //Implementación de las funciones
 void Cuerpo::Inicie(double x0,double y0,double z0,double Vx0,double Vy0,double Vz0,
@@ -36,39 +37,60 @@ void Cuerpo::Arranque(double dt){
 }
 
 void Cuerpo::Muevase(double dt){
-  //Algoritmo de LeapFrog
+  //Algoritmo de Euler
   r+=V*dt;  V+=F*(dt/m);
+}
+
+void Cuerpo::Dibujese(void){
+  cout<<", "<<r.x()<<"+"<<R<<"*cos(t),"<<r.y()<<"+"<<R<<"*sin(t)";
 }
 
 //----------- Funciones Globales -----------
 
+void InicieAnimacion(void){
+  cout<<"set terminal gif animate"<<endl;
+  cout<<"set output 'Planeta.gif'"<<endl;
+  cout<<"unset key"<<endl;
+  cout<<"set xrange [-15:15]"<<endl;
+  cout<<"set yrange [-15:15]"<<endl;
+  cout<<"set size ratio -1"<<endl;
+  cout<<"set parametric"<<endl;
+  cout<<"set trange [0:7]"<<endl;
+}
+
+void InicieCuadro(void){
+  cout<<"plot 0,0 ";
+}
+
+void TermineCuadro(void){
+  cout<<endl;
+}
 
 int main(){
-  vector3D r;
-  double GM = 1.0;
-  int Nsteps = 1000;  // Ajusta según sea necesario
-  double dt = 0.1;  // Suponiendo que T está definido
-  int StepsPerFrame = 10;  // Ajusta según sea necesario
-  int Nframes = Nsteps / StepsPerFrame;
-  Cuerpo Planeta;
 
-  double r0=10;
+  double r0=10, m0 = 1;
   double omega=sqrt(GM/pow(r0,3));
   double T=2/omega;
   double V0=omega*r0;
-
-  r.load(1,1,1);
+  double t, dt=0.1 , ttotal=1.1*T;
+  int Ncuadros=500; double tdibujo,tcuadro=ttotal/Ncuadros;
+  Cuerpo Planeta;
+  
+  InicieAnimacion();
 
   //----------(x0,y0,z0,Vx0,Vy0,Vz0,m0 ,R0)
   Planeta.Inicie(r0,0,0,0,0.5*V0,0,0.453,1);
   
   
-  for (int t = 0; t < Nsteps; t+=dt) {
+  for ( t = tdibujo= 0; t < ttotal; t+=dt, tdibujo+=dt) {
+
+      if(tdibujo>tcuadro){
+      InicieCuadro();
+      Planeta.Dibujese();
+      TermineCuadro();
+      tdibujo=0;
+    }
     
-        if (t % StepsPerFrame == 0) {
-            int k = t / StepsPerFrame;
-            cout<<Planeta.Getx()<<" "<<Planeta.Gety()<<endl;
-        }
     
     Planeta.CalculeFuerza();
     Planeta.Muevase(dt);
