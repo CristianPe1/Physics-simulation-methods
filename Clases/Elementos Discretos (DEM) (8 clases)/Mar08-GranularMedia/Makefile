@@ -1,9 +1,10 @@
+CXX = g++
 CXXFLAGS = -O2 -std=c++17
 
 all: Granos.gif
 
 %.x: %.cpp
-	g++ $(CXXFLAGS) $^ -o $@
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
 data.txt: Granos.x
 	./$^ > $@
@@ -14,4 +15,4 @@ Granos.gif: data.txt
 .PHONY: clean
 
 clean:
-	rm -f *.x *.gp *.pdf *.txt *.gif
+	rm -f *.x *.out *.gp *.pdf *.txt *.gif 

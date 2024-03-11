@@ -6,10 +6,10 @@ using namespace std;
 
 
 //Número de Granos
-const int Nx=5; 
-const int Ny=5; 
+const int Nx=6; 
+const int Ny=6; 
 const double Lx=60, Ly=60; 
-const int N = Nx*Ny;
+const int N = Nx*Ny , Ntot = N + 4;
 
 //Constantes del problema físico
 const double g = 9.80;
@@ -47,8 +47,9 @@ private:
   double xCundall[Ntot][Ntot],sold[Ntot][Ntot];
 public:
   void Inicie(void);
-  void CalculeTodasLasFuerzas(Cuerpo * Grano);
-  void CalculeFuerzaEntre(Cuerpo & Grano1,Cuerpo & Grano2);
+  void CalculeTodasLasFuerzas(Cuerpo * Grano , double dt);
+  void CalculeFuerzaEntre(Cuerpo & Grano1, Cuerpo & Grano2 , double & xCundall
+                                        , double & sold, double dt);
 };
 
 //-------Implementar las funciones de las clases------
@@ -59,13 +60,12 @@ double theta0, double omega0, double m0,double R0){
   theta=theta0; omega=omega0; I=2.0/5*m*R*R;
 }
 void Cuerpo::Mueva_r(double dt,double coeficiente){
-  r+=V*(coeficiente*dt);
+  r+=V*(coeficiente*dt); theta+=omega*(coeficiente*dt);
 }
 void Cuerpo::Mueva_V(double dt,double coeficiente){
-  V+=F*(coeficiente*dt/m);
+  V+=F*(coeficiente*dt/m); omega+=tau*(coeficiente*dt/I);
 }
 void Cuerpo::Dibujese(void){
-  cout<<" , "<<r.x()<<"+"<<R<<"*cos(t),"<<r.y()<<"+"<<R<<"*sin(t)";
   cout<<" , "<<r.x()<<"+"<<R<<"*cos(t),"<<r.y()<<"+"<<R<<"*sin(t) , "
       <<r.x()<<"+"<<R*cos(theta)/7.0<<"*t,"<<r.y()<<"+"<<R*sin(theta)/7.0<<"*t";
 }
@@ -76,7 +76,7 @@ void Colisionador::Inicie(void){
     for(int j=0;j<Ntot;j++)
       xCundall[i][j]=sold[i][j]=0;
 }
-void Colisionador::CalculeTodasLasFuerzas(Cuerpo * Grano){
+void Colisionador::CalculeTodasLasFuerzas(Cuerpo * Grano , double dt){
   int i,j;
   //Borro las fuerzas de todos los granos
   for(i=0;i<N+4;i++)
@@ -92,9 +92,10 @@ void Colisionador::CalculeTodasLasFuerzas(Cuerpo * Grano){
   //Recorro por parejas, calculo la fuerza de cada pareja y se la sumo a los dos
   for(i=0;i<N+4;i++)
     for(j=0;j<i;j++)
-      CalculeFuerzaEntre(Grano[i],Grano[j]);
+      CalculeFuerzaEntre(Grano[i],Grano[j],xCundall[i][j],sold[i][j],dt);
 }
-void Colisionador::CalculeFuerzaEntre(Cuerpo & Grano1, Cuerpo & Grano2){
+void Colisionador::CalculeFuerzaEntre(Cuerpo & Grano1, Cuerpo & Grano2 , double & xCundall
+                                        , double & sold, double dt){
   
   //Calcular el vector normal
   vector3D r21=Grano2.r-Grano1.r; 
@@ -104,32 +105,39 @@ void Colisionador::CalculeFuerzaEntre(Cuerpo & Grano1, Cuerpo & Grano2){
   //Determinar si hay colisión
   double s= R1 + R2 - d;
   
-  if(s>0){
-    //Calcular la fuerza de Hertz
-    double aux= K*pow(s,1.5);
+  if(s>0){// Si hay colision
 
-    //Calcular vector normal
-    vector3D n = r21*(1.0/d);
+    //Vectores unitarios
+    vector3D n = r21*(1.0/d),t,k; t.load(n.y(),-n.x(),0); k.load(0,0,1);
+    
+    
 
-    //Calcular la fuerza elastica de Hertz
-    vector3D F1=n*aux;
-
-    // Calculo la fuerza tagencial
+    // Calculo la velocidad de contacto
     vector3D Rw; Rw.load(0,0,R2*Grano2.omega + R1*Grano1.omega);
     vector3D Vc = Grano2.V - Grano1.V - (Rw^n);
-    vector3D Vcn = n*(Vc*n);
-    vector3D Vct = Vc - Vcn;
-
-    //Sumar las fuerzas
-    Grano2.SumeFuerza(F1,0);  Grano1.SumeFuerza(F1*(-1),0);
+    double Vcn = (Vc*n), Vct = Vc*t;
 
     double m1 = Grano1.m, m2 = Grano2.m;
     double m12 = (m1*m2)/(m1+m2);
 
-    F1 = (-Gamma*sqrt(s)*m12)*Vcn;
-    Grano2.SumeFuerza(F1,0);  Grano1.SumeFuerza(F1*(-1),0);
+    //Calculo  la fuerza de deformacion plastica normal (Hertz-Kuratomo-Kano)
+    double  Fn =K*pow(s,1.5) - (Gamma*sqrt(s)*m12)*(Vc*n); 
+
+    //Calculo la fuerza tangencial (Cundall)
+    xCundall += Vct*dt; double Ft = -Kcundall*xCundall; double Ftmax = mu*fabs(Fn);
+    if(fabs(Ft)>Ftmax) Ft=Ft/fabs(Ft)*Ftmax;
+
+    //Variables a calcular
+    vector3D F1,F2, tau1,tau2;
+    F2 = n*Fn + t*Ft; tau2 = ((n*(-R2))^F2); F1 = F2*(-1); tau1 = ((n*R1)^F1);
+    //Calcula y Cargue las fuerzas
+
+    Grano2.SumeFuerza(F2,tau2*k);  Grano1.SumeFuerza(F1,tau1*k);
 
   }
+
+  if(sold>=0 && s<0) xCundall=0;
+  sold=s;
 }
 
 
@@ -137,7 +145,7 @@ void Colisionador::CalculeFuerzaEntre(Cuerpo & Grano1, Cuerpo & Grano2){
 //---Funciones de Animacion---
 void InicieAnimacion(void){
   cout<<"set terminal gif animate"<<endl; 
-  cout<<"set output 'Grano.gif'"<<endl;
+  cout<<"set output 'Granos.gif'"<<endl;
   cout<<"unset key"<<endl;
   cout<<"set xrange[-20:"<<Lx + 20<<"]"<<endl;
   cout<<"set yrange[-20:"<<Ly + 20<<"]"<<endl;
@@ -160,22 +168,22 @@ void TermineCuadro(void){
 
 int main(){
   
-  Cuerpo Grano[N+4];
+  Cuerpo Grano[Ntot];
   Colisionador Hertz;
   Crandom ran64(1);
   int i,ix,iy;
   //Parametros de la simulación
-  double m0=10; double R0=2;
-  double kT=1000; 
+  double m0=10.0; double R0=2.0;
+  double kT=5e5; 
   //Variables auxiliares para la condición inicial
   double dx=Lx/(Nx+1),dy=Ly/(Ny+1);
-  double theta; double V0=sqrt(kT/m0);
+  double theta; double V0=sqrt(kT/m0), omega0=V0/R0;//
   double x0,y0,Vx0,Vy0;
-  //Variables auxiliares para correr la simulacion
-  int Ncuadros=1000; double t,tdibujo,dt=1e-3,tmax=20/*\Lx/V0*/,tcuadro=tmax/Ncuadros; 
-  
   //Variables auxiliares para las paredes
-  double Rpared=10*Lx, Mpared=10*m0;
+  double Rpared=1000*Lx, Mpared=1000*m0;
+  //Variables auxiliares para correr la simulacion
+  int Ncuadros=1000; double t,tdibujo,dt=1e-3,tmax=20,tcuadro=tmax/Ncuadros; 
+
 
   InicieAnimacion();
   
@@ -214,19 +222,19 @@ int main(){
     // cout<<Grano[1].Getx()<<" "<<Grano[1].Gety()<<endl;
     
     for(i=0;i<N;i++) Grano[i].Mueva_r(dt,xi);    
-    Hertz.CalculeTodasLasFuerzas(Grano); 
+    Hertz.CalculeTodasLasFuerzas(Grano,dt); 
     for(i=0;i<N;i++) Grano[i].Mueva_V(dt,Um2lambdau2);
 
     for(i=0;i<N;i++) Grano[i].Mueva_r(dt,chi);
-    Hertz.CalculeTodasLasFuerzas(Grano); 
+    Hertz.CalculeTodasLasFuerzas(Grano,dt); 
     for(i=0;i<N;i++) Grano[i].Mueva_V(dt,lambda);
     
     for(i=0;i<N;i++) Grano[i].Mueva_r(dt,Um2chiplusxi);
-    Hertz.CalculeTodasLasFuerzas(Grano); 
+    Hertz.CalculeTodasLasFuerzas(Grano,dt); 
     for(i=0;i<N;i++)Grano[i].Mueva_V(dt,lambda);
 
     for(i=0;i<N;i++) Grano[i].Mueva_r(dt,chi);
-    Hertz.CalculeTodasLasFuerzas(Grano); 
+    Hertz.CalculeTodasLasFuerzas(Grano,dt); 
     for(i=0;i<N;i++)Grano[i].Mueva_V(dt,Um2lambdau2);
 
     for(i=0;i<N;i++) Grano[i].Mueva_r(dt,xi);
