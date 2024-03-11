@@ -7,13 +7,8 @@ _build
 ##Ejecutables de Windows y Linux 
 *.exe
 *.out
-<<<<<<< HEAD
 *x.
 *o
-=======
-*.x
-*.o
->>>>>>> 4b93cc5a37f4467cd836ddbfa4398c1ad737933d
 ##Archivos de los datos
 *.dat
 *.txt
