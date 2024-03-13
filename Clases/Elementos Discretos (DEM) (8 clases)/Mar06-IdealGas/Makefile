@@ -1,0 +1,17 @@
+CXXFLAGS = -O2 -std=c++17
+
+all: Moleculas.gif
+
+%.x: %.cpp
+	g++ $(CXXFLAGS) $^ -o $@
+
+data.txt: Moleculas.x
+	./$^ > $@
+
+Moleculas.gif: data.txt
+	gnuplot $^
+
+.PHONY: clean
+
+clean:
+	rm -f *.x *.gp *.pdf *.txt *.gif

@@ -99,19 +99,7 @@ void Colisionador::CalculeFuerzaEntre(Cuerpo & moleculas1, Cuerpo & moleculas2){
   }
 }
 
-// void Colisionador::CalculeFuerzaEntre(Cuerpo & Molecula1,Cuerpo & Molecula2){
-//   //Determinar si hay colision
-//   vector3D r21=Molecula2.r-Molecula1.r; double d=r21.norm();
-//   double s=(Molecula1.R+Molecula2.R)-d;
-//   if(s>0){ //Si hay colisión
-//     //Calcular el vector normal
-//     vector3D n=r21*(1.0/d);
-//     //Calculo la fuerza
-//     vector3D F2=n*(K*pow(s,1.5));
-//     //Las sumo a los granos
-//     Molecula2.SumeFuerza(F2);  Molecula1.SumeFuerza(F2*(-1));
-//   }
-// }
+
 //----------- Funciones Globales -----------
 //---Funciones de Animacion---
 void InicieAnimacion(void){

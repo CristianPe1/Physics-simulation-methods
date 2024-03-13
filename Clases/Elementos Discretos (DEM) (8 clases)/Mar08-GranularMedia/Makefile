@@ -1,18 +1,19 @@
-CXX = g++
+CC = g++
 CXXFLAGS = -O2 -std=c++17
+TARGET = Granos
 
-all: Granos.gif
+all: $(TARGET)
 
-%.x: %.cpp
-	$(CXX) $(CXXFLAGS) $^ -o $@
+$(TARGET).x: $(TARGET).cpp
+	$(CC) $(CXXFLAGS) $^ -o $@
 
-data.txt: Granos.x
+$(TARGET).txt: $(TARGET).x
 	./$^ > $@
 
-Granos.gif: data.txt
+$(TARGET).gif: $(TARGET).txt
 	gnuplot $^
 
 .PHONY: clean
 
 clean:
-	rm -f *.x *.out *.gp *.pdf *.txt *.gif 
+	rm -f *.x *.gp *.pdf *.txt *.gif
