@@ -2,7 +2,7 @@ CC = g++
 CXXFLAGS = -O2 -std=c++17
 TARGET = Granos
 
-all: $(TARGET)
+all: $(TARGET).gif
 
 $(TARGET).x: $(TARGET).cpp
 	$(CC) $(CXXFLAGS) $^ -o $@

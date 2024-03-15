@@ -94,6 +94,7 @@ void Colisionador::CalculeFuerzaEntre(Cuerpo & moleculas1, Cuerpo & moleculas2){
     vector3D F1=n*aux;
 
     //Sumar las fuerzas
+    
     moleculas2.SumeFuerza(F1);  moleculas1.SumeFuerza(F1*(-1));
 
   }

@@ -1,6 +1,6 @@
 CC = g++
 CXXFLAGS = -O2 -std=c++17
-TARGET = Moleculas
+TARGET = Granos
 
 all: $(TARGET).gif
 
