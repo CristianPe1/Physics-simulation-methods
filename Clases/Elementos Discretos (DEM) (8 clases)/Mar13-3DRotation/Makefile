@@ -1,6 +1,6 @@
 CC = g++
 CXXFLAGS = -O2 -std=c++17
-TARGET = Granos
+TARGET = TrompoCuaterniones
 
 all: $(TARGET).gif
 

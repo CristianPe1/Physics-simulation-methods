@@ -9,6 +9,7 @@ _build
 *.out
 *.x
 *.o
+*.mesh
 ##Archivos de los datos
 *.dat
 *.txt
