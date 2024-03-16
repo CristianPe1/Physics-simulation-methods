@@ -14,7 +14,7 @@ O.bodies.append(geom.facetBox((0.5,0.5,0.5),(.5,.5,.5),material=matId,wallMask=3
 
 from yade import pack
 sp = pack.SpherePack()
-sp.makeCloud((0,0,0.5),(1,1,1.5),rMean=.05,rRelFuzz=.5,num=10)
+sp.makeCloud((0,0,0.5),(1,1,1.5),rMean=.05,rRelFuzz=.5,num=10 ,seed =2)
 sp.toSimulation()
 
 
@@ -32,7 +32,24 @@ O.engine = [
 
 O.dt = 0.8 * PWaveTimeStep()
 
+#Plot Energy
+O.trackEnergy = True
 
+from yade import plot
+
+plot.plots={'i':('total','potential','kinetic')}
+plot.plot()
+
+def addData():
+    plot.addData( i=O.iter, 
+                total=O.energy.total(),
+                potential=O.energy.potential(), 
+                kinetic=O.energy.kinetic()
+                )
+
+O.engines = O.engines + [PyRunner(command='addData()',iterPeriod=100)]
+
+O.saveTmp()
 
     
 
